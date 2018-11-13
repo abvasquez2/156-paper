@@ -1,0 +1,54 @@
+#Logistic Map
+import matplotlib.pyplot as plt
+import numpy as np
+def f(X0,n,r):
+    X = []
+    X.append(X0)
+    for i in range(0,n+1):
+        Xn1 = 4*r*X0*(1-X0)
+        X.append(Xn1)
+        X0 = Xn1
+    return X
+
+X = f(0.65,40,0.809)
+#plt.plot(X,"o--")
+#plt.xlabel("n")
+#plt.ylabel("x(n)")
+#plt.show()
+    
+    
+#Lyaponov
+
+def f(x,r):
+    y = 4*r*x*(1-x)
+    return y 
+
+def deriv_f(x,r):
+    dd = 4*r*(1-2*x)
+    return dd
+
+def lyapunov(n1,n2,x0,r):
+    x = x0
+    Sum = 0.0
+    
+    for i in range(0,n1):  
+        x = f(x,r)
+    for i in range(0,n2-n1):   
+        dd = deriv_f(x,r)
+        Sum += np.log(np.abs(dd))
+        x = f(x,r)
+    L = Sum/(n2-n1)
+    return L  
+
+rlist = np.linspace(0.51,1,1000)
+llist = []
+for i in rlist:
+    l = lyapunov(2000,5000,0.67,i)
+    llist.append(l)
+    
+    
+plt.plot(rlist,llist)
+plt.axhline(0, color='black',linestyle="--")
+plt.show()
+plt.xlabel("r")
+plt.ylabel("Lyaponov Exponent")
